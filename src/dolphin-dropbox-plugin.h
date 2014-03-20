@@ -51,21 +51,14 @@ public:
     virtual QList<QAction*> actions(const KFileItemListProperties & fileItemInfos, QWidget * parentWidget);
 
 private slots:
-//    void shareInBrowseAction();
-//    void browseFolderInBrowserAction();
-//    void shareFileLinkAction();
-//    void browseRevisionsAction();
-//    void copyPublicUrlAction();
-//    void copyGalleryLinkAction();
-    void testHashAction();
+    void publicLinkActionHandler();
+    void openRemoteFolderActionHandler();
 
 private:
     struct Private;
     Private * p;
     QString sendCommand(QVariant string, QLocalSocket *socket, bool inGuiThread = true);
-//    QString sendCommand2(QVariant string, QLocalSocket *socket, bool inGuiThread = true);
     QVariant parseJson(QByteArray inp);
-    bool testJson(QByteArray inp);
 };
 #endif // DolphinDropboxPlugin_H
 

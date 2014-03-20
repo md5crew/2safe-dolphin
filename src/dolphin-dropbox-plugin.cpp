@@ -33,6 +33,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QtDBus>
+#include <QDesktopServices>
 
 #include <KDE/KPluginFactory>
 #include <KDE/KPluginLoader>
@@ -41,8 +42,7 @@
 
 #include "dolphin-dropbox-plugin.h"
 
-//Сокет демона
-#define SOCKET_FILE "example.sock"
+#define SOCKET_FILE ".2safe/control.sock"
 
 K_PLUGIN_FACTORY(DolphinDropboxPluginFactory, registerPlugin<DolphinDropboxPlugin>();)
 K_EXPORT_PLUGIN(DolphinDropboxPluginFactory("dolphin-dropbox-plugin"))
@@ -60,11 +60,7 @@ DolphinDropboxPlugin::DolphinDropboxPlugin(QObject* parent, const QVariantList &
 {
     Q_UNUSED(args);
     p = new Private;
-
-	p->controlSocketPath =  QDir::tempPath(); 
-    p->controlSocketPath.append(QDir::separator()).append(SOCKET_FILE);
-    p->controlSocketPath = QDir::toNativeSeparators(p->controlSocketPath);
-    p->controlSocket.connectToServer(p->controlSocketPath);
+    p->controlSocketPath = (QDir::homePath() + QDir::separator() + QString(SOCKET_FILE));
 }
 
 DolphinDropboxPlugin::~DolphinDropboxPlugin()
@@ -91,40 +87,46 @@ QList<QAction*> DolphinDropboxPlugin::actions(const KFileItemListProperties & fi
         return actions;
     }
 
+    if (!itemFileInfo.filePath().contains("/home/xlab/2safe/", Qt::CaseInsensitive) &&
+         !itemFileInfo.filePath().contains("/home/xlab/Blog/", Qt::CaseInsensitive)) {
+        // file is not in supported dirs
+        return actions;
+    }
 
     // everything looks fine so populate the menu
     KActionMenu * menuAction = new KActionMenu(this);
-    menuAction->setText("MyPlugin");
+    menuAction->setText("2Safe Plugin");
+    menuAction->setIcon(QIcon("/home/xlab/Coding/2safe-dolphin/2safe.png"));
     actions << menuAction;
 
     p->contextFilePath = itemPath;
- 
-    //-----------------------
-    //Тестовый метод
-    {
-        QAction * testAction = new KAction(this);
-        testAction->setIcon(KIcon("klipper"));
-        testAction->setText(i18nc("@item:inmenu", "TEST"));
-        menuAction->addAction(testAction);
-        connect(testAction, SIGNAL(triggered()),
-                this, SLOT(testHashAction()));
-    }
-    //-------------------------
+
+    QAction * publicLinkAction = new KAction(this);
+    publicLinkAction->setIcon(KIcon("klipper"));
+    publicLinkAction->setText(i18nc("@item:inmenu", "Get public link"));
+    connect(publicLinkAction, SIGNAL(triggered()),
+            this, SLOT(publicLinkActionHandler()));
+
+    QAction * openRemoteFolderAction = new KAction(this);
+    openRemoteFolderAction->setIcon(KIcon("konqueror"));
+    openRemoteFolderAction->setText(i18nc("@item:inmenu", "Open in remote folder"));
+    connect(openRemoteFolderAction, SIGNAL(triggered()),
+            this, SLOT(openRemoteFolderActionHandler()));
+
+    menuAction->addAction(publicLinkAction);
+    menuAction->addAction(openRemoteFolderAction);
+
     return actions;
 }
-
-
-/*
-*/
 
 //Re-entrant
 QString DolphinDropboxPlugin::sendCommand(QVariant command, QLocalSocket *socket, bool inGuiThread)
 {
     //If we're in the GuiThread we can't afford to wait long
     //in the worker thread we have bigger margins
-    int waitTime = 500;
+    int waitTime = 2000;
     if(inGuiThread)
-        waitTime = 100;
+        waitTime = 1000;
 
     if(!socket->isOpen()) {
         socket->connectToServer(p->controlSocketPath);
@@ -132,33 +134,21 @@ QString DolphinDropboxPlugin::sendCommand(QVariant command, QLocalSocket *socket
             return QString();
     }
 
-    //Формирование JSON.
     QJson::Serializer serializer;
 
     QByteArray _jcommand = serializer.serialize(command);
     socket->write(_jcommand);
-    //Отправка в сокет
     socket->flush();
 
     bool ready = false;
     QString reply;
 
-    while(!ready)  {
-        if(!socket->waitForReadyRead(waitTime))    {
-            //If we have to wait this long, the socket probably isn't open anymore (dropbox died or closed)
-            socket->close();
-            return QString();
-        }
-
-        reply.append(socket->readAll());
-
-        if(reply.endsWith("}"))
-        {
-            if (testJson(reply.toUtf8()))
-                ready = true;
-        }
+    if(!socket->waitForReadyRead(waitTime))    {
+        socket->close();
+        return QString();
     }
 
+    reply.append(socket->readAll());
     return reply;
 }
 
@@ -171,19 +161,29 @@ QVariant DolphinDropboxPlugin::parseJson(QByteArray inp){
     return out;
 }
 
-//Проверка корректности JSON
-bool DolphinDropboxPlugin::testJson(QByteArray inp){
-    QJson::Parser parser;
-    bool ok;
-    parser.parse(inp,&ok);
-    return ok;
-}
-
-void DolphinDropboxPlugin::testHashAction(){
+void DolphinDropboxPlugin::publicLinkActionHandler(){
     QVariantMap command;
-    command.insert("verb","hash");
-    command.insert("path",p->contextFilePath);
-    sendCommand(command, &(p->controlSocket));
+    QVariantMap args;
+    args.insert("file", p->contextFilePath);
+    command.insert("type","action");
+    command.insert("verb","get_public_link");
+    command.insert("args", args);
+    QString link = sendCommand(command, &(p->controlSocket));
+    if(!link.isEmpty()) {
+        //QDesktopServices::openUrl(QUrl(link));
+        QApplication::clipboard()->setText(link);
+    }
 }
 
-
+void DolphinDropboxPlugin::openRemoteFolderActionHandler(){
+    QVariantMap command;
+    QVariantMap args;
+    args.insert("file", p->contextFilePath);
+    command.insert("type","action");
+    command.insert("verb","open_in_browser");
+    command.insert("args", args);
+    QString link = sendCommand(command, &(p->controlSocket));
+    if(!link.isEmpty()){
+        QDesktopServices::openUrl(QUrl(link));
+    }
+}
