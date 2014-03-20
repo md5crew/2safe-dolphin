@@ -1,0 +1,19 @@
+Source: dolphin-dropbox-plugin
+Section: kde
+Priority: optional
+Maintainer: Sergei Stolyarov <sergei.stolyarov@regolit.com>
+Build-Depends: debhelper (>= 7),
+ libqt4-dev,
+ kdelibs5-dev,
+ cmake
+Standards-Version: 3.9.3
+Homepage: https://bitbucket.org/cancel/dolphin-dropbox-plugin
+Vcs-Hg: https://bitbucket.org/cancel/dolphin-dropbox-plugin
+Vcs-Browser: https://bitbucket.org/cancel/dolphin-dropbox-plugin/src
+
+Package: dolphin-dropbox-plugin
+Architecture: any
+Depends: ${shlibs:Depends},
+ ${misc:Depends}
+Description: dolphin Dropbox plugin
+ Allows basic operations for Dropbox files.

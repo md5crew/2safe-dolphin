@@ -1,0 +1,63 @@
+Available methods are:
+
+`shmodel_to_clipboard`
+    copy link to clipboard
+
+`tray_action_hard_exit`
+    force application terminate
+
+`get_public_link`
+    get public link to the file (must be in "~/Dropbox/Public" directory)
+
+`get_dropbox_status`
+    overall dropbox service status
+
+`icon_overlay_context_options`
+    arguments: paths
+
+`icon_overlay_context_action`
+    arguments: verb, paths
+    do something for specified file
+
+`icon_overlay_file_status`
+    fetch file status
+
+`tray_action_open_tray_login`
+    open dropbox user homepage in browser (autologin)
+
+`tray_action_launch_auth_page`
+    open auth page in browser
+
+`get_folder_tag`
+    ???
+
+`get_emblems`
+    ???
+
+`get_dropbox_globals`
+    arguments: keys (icon_state)
+    ???
+
+`tray_action_open_shell`
+    ???
+
+`needs_link`
+    return hyperlink (in the parameter "link")
+
+`get_ignore_set`
+    ???
+
+`ignore_set_add`
+    ???
+
+`ignore_set_remove`
+    ???
+
+`tray_action_open_discussion_forum`
+    open discussion forum in the browser
+
+`tray_action_open_dropbox`
+    open Dropbox data folder in the file browser
+
+`tray_action_soft_resync`
+

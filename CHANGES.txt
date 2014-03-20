@@ -1,0 +1,25 @@
+1.4 (2013-Jul-18)
+
+* fixed incorrect context menu for folder (added missing menu item)
+
+1.3 (2013-Jul-07)
+
+* commands in context menu are not guessed now, instead plugin display what dropbox tells to show
+
+1.2 (2012-xx-xx)
+----------------
+
+* is dropbox running check added (do not show dropbox context menu items whe dropbox service is not started)
+* more intelligent check for context menu availability (using methods provided by Dropbox itsekf)
+* russian localization added
+
+1.1 (2012-04-12)
+----------------
+
+Complete rewrite.
+
+1.0
+---
+
+Initial release, debianized sources downloaded from
+http://gitweb.kde.org/scratch/trichard/dolphin-box-plugin.git

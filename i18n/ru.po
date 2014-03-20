@@ -1,0 +1,62 @@
+# SO
+# Copyright (C) Sergei Stolyarov
+# This file is distributed under the same license as the dolphin-dropbox-plugin package.
+# Sergei Stolyarov <sergei.stolyarov@regolit.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: dolphin-dropbox-plugin 1.0\n"
+"Report-Msgid-Bugs-To: https://bitbucket.org/cancel/pyrone/issues/new\n"
+"POT-Creation-Date: 2013-07-18 22:16+0700\n"
+"PO-Revision-Date: 2012-05-23 11:59+0700\n"
+"Last-Translator: Sergei Stolyarov <sergei.stolyarov@regolit.com>\n"
+"Language-Team: Sergei Stolyarov <sergei.stolyarov@regolit.com>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: dolphin-dropbox-plugin.cpp:128
+msgctxt "@item:inmenu"
+msgid "Share file and copy link"
+msgstr "Расшарить файл и скопировать ссылку"
+
+#: dolphin-dropbox-plugin.cpp:130
+msgctxt "@item:inmenu"
+msgid "Share folder and copy link"
+msgstr "Расшарить папку и скопировать ссылку"
+
+#: dolphin-dropbox-plugin.cpp:139
+msgctxt "@item:inmenu"
+msgid "Browse on Dropbox Website"
+msgstr "Открыть на сайте Dropbox"
+
+#: dolphin-dropbox-plugin.cpp:149
+msgctxt "@item:inmenu"
+msgid "Share this file"
+msgstr "Поделиться файлом"
+
+#: dolphin-dropbox-plugin.cpp:151
+msgctxt "@item:inmenu"
+msgid "Share this folder"
+msgstr "Поделиться каталогом"
+
+#: dolphin-dropbox-plugin.cpp:159
+msgctxt "@item:inmenu"
+msgid "View Previous Versions..."
+msgstr "Смотреть предыдущие версии..."
+
+#: dolphin-dropbox-plugin.cpp:167
+msgctxt "@item:inmenu"
+msgid "Copy public link"
+msgstr "Скопировать публичную ссылку"
+
+#: rc.cpp:1
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Sergei Stolyarov"
+
+#: rc.cpp:2
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "sergei.stolyarov@regolit.com"
